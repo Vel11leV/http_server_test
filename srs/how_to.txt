@@ -1,0 +1,79 @@
+Steps for building and starting the http_server
+
+1. Install the Ubuntu subsystem (for Windows)
+
+2. Install GIT on Ubuntu
+
+3. Check the g++ compiler with the command:
+
+       $ g++ --version
+
+4. If not installed, install g++:
+
+       $ sudo apt install build-essential
+
+5. Clone the repo:
+
+      https: https://github.com/Vel11leV/http_server_test.git
+      ssh:   git@github.com:Vel11leV/http_server_test.git
+
+   In order to clone via ssh you need to add a public key (follow the GitHub instructions on how to generate and add one).
+   For cloning via https follow the GitHub instructions (you need a personal access token)
+
+6. Check out the 'develop' branch
+
+       $ git checkout develop
+
+7. Go to the srs folder and compile the source file
+
+        g++ -Wall http_server.cpp -o http_server
+
+8. Start the http_server in background mode. You get the PID of http_server.
+   PID is needed for the process to stop.
+
+        $ ./http_server &
+
+9. Find the existing http_server via command: 
+
+        $  ps -a
+
+   The server started if you see the http_server 
+
+10. Work with the server from the curl utility via GET POST DELETE requests.
+
+    HTTP commands:
+        $ curl -i http://localhost:3425/foo
+        $ curl -i -X POST -d 'hello' http://localhost:3425/foo
+        $ curl -i -X DELETE http://localhost:3425/foo
+
+    Number 3425 - port number, must be the same as in the program (#define HTTP_SERVER_TCP_PORT 3425).
+
+    If curl utility does not exist, install it:
+        $ sudo apt install curl
+        $ curl --version
+    
+
+Design summarizing
+
+- The http server is implemented. All the code is located in one file (it is test task so I located it all in one file).
+- Project structure can be divided into library folders( HTTP protocol library, data storage and extraction library).
+- I have added an additional field to the data structure for further implementation: the X-Data-Version field in HTTP.
+- There are two modes in the code: debug and release, which are implemented via .
+    #define HTTP_SERVER_DEBUG_MODE  0  // release mode '0', debug mode '1'.
+- In order to make multiple client connections, multithreading methods can be applied: a new thread on every connection for request processing.
+- The bash script for automatic tool chain check and update and project build can be written and added to the repo.
+- The .gitignore file can be added to the repo in order to prevent irrelevant files from being added.
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 

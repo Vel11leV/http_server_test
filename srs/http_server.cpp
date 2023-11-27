@@ -7,8 +7,9 @@
 #include <list>
 #include <iterator>
 
-#define HTTP_SERVER_DEBUG_MODE 0
-#define HTTP_SERVER_TCP_PORT 3425
+#define HTTP_SERVER_DEBUG_MODE  0  // release mode '0', debug mode '1'
+#define HTTP_SERVER_TCP_PORT  3425
+#define HTTP_SERVER_DATA_BUF_SIZE  1024
 
 using namespace std;
 
@@ -49,7 +50,7 @@ int main(void)
 {
     int sock, listener;
     struct sockaddr_in addr;
-    char buf[1024];
+    char buf[HTTP_SERVER_DATA_BUF_SIZE];
     int bytes_read;
 
     listener = socket(AF_INET, SOCK_STREAM, 0);
@@ -69,7 +70,10 @@ int main(void)
     }
 
     listen(listener, 1);
-    std::cout << " HTTP server started. "<< std::endl;	 
+    #if HTTP_SERVER_DEBUG_MODE 
+        std::cout << " HTTP server started. "<< std::endl;
+    #endif
+		 
     while(1)
     {
         sock = accept(listener, NULL, NULL);
@@ -114,9 +118,9 @@ int http_server_ProcessRequest(string request, string &response)
 	int retValue = 0;
 	if (request.find(http_server_HTTP)!=string::npos)
 	{
-	//	#if HTTP_SERVER_DEBUG_MODE 
+		#if HTTP_SERVER_DEBUG_MODE 
 		    std::cout << " HTTP request detected. "<< std::endl;
-	//	#endif	
+		#endif	
 		if(request.find(http_server_GET)!=string::npos){		
 			 /*URI parsing*/
 			 int uriLen = request.find(http_server_HTTP) - (request.find(http_server_GET) +  http_server_GET.size());
